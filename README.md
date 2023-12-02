@@ -29,7 +29,7 @@ This will install all the dependencies listed in the `requirements.txt` file.
 \- Usage:
 
 ```
-python main.py analyze INPUT\_FILE [--save OUTPUT\_FILE]
+python solution.py analyze INPUT\_FILE [--save OUTPUT\_FILE]
 ```
 
 - `INPUT\_FILE`: Path to the CSV file containing signal data.
@@ -43,7 +43,7 @@ python main.py analyze INPUT\_FILE [--save OUTPUT\_FILE]
 \- Usage:
 
 ```
-python main.py water INPUT\_FILE [--non-baseline-fixed]
+python solution.py water INPUT\_FILE [--non-baseline-fixed]
 ```
 
 - `INPUT\_FILE`: Path to the CSV file containing signal data.
@@ -59,7 +59,7 @@ python main.py water INPUT\_FILE [--non-baseline-fixed]
 - Command:
 
 ```
-python main.py analyze "path/to/signal.csv"
+python solution.py analyze "path/to/signal.csv"
 ```
 
 \- This command analyzes the signal data in `signal.csv` and generates a ***peak\_detection.png*** image file to show the plot.
@@ -69,7 +69,7 @@ python main.py analyze "path/to/signal.csv"
 \- Command:
 
 ```
-python main.py analyze "path/to/signal.csv" --save "results.csv"
+python solution.py analyze "path/to/signal.csv" --save "results.csv"
 ```
 
 \- This command analyzes the signal data, generates a ***peak\_detection.png*** image file to show the plot and saves the results to `results.csv`.
@@ -79,7 +79,7 @@ python main.py analyze "path/to/signal.csv" --save "results.csv"
 \- Command:
 
 ```
-python main.py water "path/to/signal.csv"
+python solution.py water "path/to/signal.csv"
 ```
 
 \- Generates threshold and shows in console and saves the water peaks in ***water\_peak.png*** image file based on the provided signal data.
@@ -89,7 +89,7 @@ python main.py water "path/to/signal.csv"
 \- Command:
 
 ```
-python main.py water "path/to/signal.csv" --non-baseline-fixed
+python solution.py water "path/to/signal.csv" --non-baseline-fixed
 ```
 
 \- Generates threshold without fixing baseline and shows in console and saves the water peaks in ***water\_peak.png*** image file based on the provided signal data.
@@ -99,7 +99,13 @@ python main.py water "path/to/signal.csv" --non-baseline-fixed
 \- Command:
 
 ```
-python main.py --help<br>python main.py water --help<br>python main.py analyze --help
+python solution.py --help
+```
+```
+python solution.py water --help
+```
+```
+python solution.py analyze --help
 ```
 
 \- Each command will show help window for related their section
