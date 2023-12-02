@@ -1,10 +1,10 @@
-**Overview**
+# Overview
 
 `solution.py` is a Python command-line tool designed for signal analysis. It offers functionalities to analyze signal data from CSV files and generate optimal MIN-MAX water peak thresholds. The tool is equipped with two primary commands: `analyze` and `water`.
 
 
 
-**Prerequisites**
+# Prerequisites
 
 \- Python (Version 3.x)
 
@@ -20,7 +20,7 @@ This will install all the dependencies listed in the `requirements.txt` file.
 
 
 
-**Commands**
+# Commands**
 
 `analyze`
 
@@ -52,7 +52,7 @@ python main.py water INPUT\_FILE [--non-baseline-fixed]
 
 
 
-**Usage Examples**
+# Usage Examples**
 
 **1.  Analyze Signal Data:**
 
@@ -104,7 +104,7 @@ python main.py --help<br>python main.py water --help<br>python main.py analyze -
 
 \- Each command will show help window for related their section
 
-**Notes**
+# Notes**
 
 \- Ensure that the CSV file paths are correctly specified. If a file path contains spaces, enclose it in quotes.
 
