@@ -4,7 +4,7 @@ def solution(input_csv, output_csv=None):
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
-    from scipy.signal import find_peaks, savgol_filter
+    from scipy.signal import find_peaks, savgol_filter, peak_widths
 
     all_adc2 = []
 
@@ -103,8 +103,6 @@ def solution(input_csv, output_csv=None):
         )
     ax2.legend()
     fig2.savefig("peak_detection.png", dpi=300)
-
-    from scipy.signal import peak_widths
 
     # Calculate peak widths
     widths, width_heights, left_ips, right_ips = peak_widths(
