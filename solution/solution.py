@@ -1,14 +1,14 @@
 import click
 from tqdm import tqdm
 import time
+import warnings
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import find_peaks, savgol_filter, peak_widths
+
 
 def solution(input_csv, output_csv=None):
-    import warnings
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from scipy.signal import find_peaks, savgol_filter, peak_widths
-    
     start_time = time.time()
 
     all_adc2 = []
@@ -31,9 +31,11 @@ def solution(input_csv, output_csv=None):
     # actual_signal_min_possible_water_peaks_threshold = 702.736550291642
     actual_signal_max_possible_water_peaks_threshold = 733.4351469568594
 
-    with tqdm(desc="Processing Signal", total=100, bar_format='{l_bar}{bar}|') as pbar:
+    with tqdm(desc="Processing Signal", total=100, bar_format="{l_bar}{bar}|") as pbar:
         # Fix Baseline
-        rolling_avg = pd.Series(filtered_adc2).rolling(window=50000, min_periods=1).mean()
+        rolling_avg = (
+            pd.Series(filtered_adc2).rolling(window=50000, min_periods=1).mean()
+        )
         filtered_adc2 = filtered_adc2 - rolling_avg
         pbar.update(15)
 
@@ -47,7 +49,7 @@ def solution(input_csv, output_csv=None):
         # Apply smoothing
         filtered_adc2 = savgol_filter(filtered_adc2, window_size, poly_order)
         pbar.update(15)
-        
+
         # Find peaks
         final_peaks2, _ = find_peaks(
             filtered_adc2, height=min_possible_water_peaks_threshold
@@ -69,11 +71,11 @@ def solution(input_csv, output_csv=None):
         else:
             return "g"
 
-    with tqdm(desc="Analyzing", total=100, bar_format='{l_bar}{bar}|') as pbar:
+    with tqdm(desc="Analyzing", total=100, bar_format="{l_bar}{bar}|") as pbar:
         # Create plots for ADC2
         fig2, ax2 = plt.subplots(figsize=(100, 10))
         pbar.update(10)
-        
+
         ax2.plot(time_axis, all_adc2, label="Signal")
         ax2.set_title("Water and Tissue Peak Detection")
         pbar.update(20)
@@ -83,7 +85,7 @@ def solution(input_csv, output_csv=None):
         peak_indices = []
         eps_value = 1e-2
         eps_index = 2000
-        
+
         for peak in final_peaks2:
             color = get_peak_color(
                 filtered_adc2[peak],
@@ -98,7 +100,10 @@ def solution(input_csv, output_csv=None):
                     prev_peak_value is None
                     or abs(filtered_adc2[peak] - prev_peak_value) >= eps_value
                 ):
-                    if prev_peak_index is None or abs(peak - prev_peak_index) >= eps_index:
+                    if (
+                        prev_peak_index is None
+                        or abs(peak - prev_peak_index) >= eps_index
+                    ):
                         peak_indices.append(peak)
                         prev_peak_value = filtered_adc2[peak]
                         prev_peak_index = peak
@@ -168,7 +173,7 @@ def solution(input_csv, output_csv=None):
 
     if output_csv:
         df.to_csv(output_csv, index=False)
-        print(f"\nSaved result in \"{output_csv}\"")
+        print(f'\nSaved result in "{output_csv}"')
 
     df["width"] = (
         widths_time / 2
@@ -184,15 +189,11 @@ def solution(input_csv, output_csv=None):
     end_time = time.time()
     elapsed_time = end_time - start_time - 3
 
-    print(f"\nSaved plot in \"peak_detection.png\"")
+    print(f'\nSaved plot in "peak_detection.png"')
     print(f"\nTotal time taken: {elapsed_time} seconds")
 
-def generate_water_threshold(input_file, non_baseline_fixed):
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from scipy.signal import find_peaks, savgol_filter
 
+def generate_water_threshold(input_file, non_baseline_fixed):
     start_time = time.time()
 
     all_adc2 = []
@@ -209,7 +210,7 @@ def generate_water_threshold(input_file, non_baseline_fixed):
 
     multiply_min = 2.5
     multiply_max = 5
-    with tqdm(desc="Processing Signal", total=100, bar_format='{l_bar}{bar}|') as pbar:
+    with tqdm(desc="Processing Signal", total=100, bar_format="{l_bar}{bar}|") as pbar:
         progress_temp = 25
         if non_baseline_fixed is False:
             rolling_avg = (
@@ -233,7 +234,9 @@ def generate_water_threshold(input_file, non_baseline_fixed):
         # smooth_adc2 = filtered_adc2
         pbar.update(25)
         # Calculate optimal minimum thresholds
-        optimal_min_threshold2 = np.mean(smooth_adc2) + multiply_min * np.std(smooth_adc2)
+        optimal_min_threshold2 = np.mean(smooth_adc2) + multiply_min * np.std(
+            smooth_adc2
+        )
 
         # Detect initial peaks using minimum threshold
         initial_peaks2, _ = find_peaks(smooth_adc2, height=optimal_min_threshold2)
@@ -250,7 +253,7 @@ def generate_water_threshold(input_file, non_baseline_fixed):
         time.sleep(1)
         pbar.update(25)
 
-    with tqdm(desc="Generating Plot", total=100, bar_format='{l_bar}{bar}|') as pbar:
+    with tqdm(desc="Generating Plot", total=100, bar_format="{l_bar}{bar}|") as pbar:
         # Create plots for ADC2
         fig2, ax2 = plt.subplots(figsize=(100, 10))
         ax2.plot(smooth_adc2)
@@ -272,12 +275,13 @@ def generate_water_threshold(input_file, non_baseline_fixed):
     ##print(f"Optimal Max Threshold 1 for entire data: {optimal_max_threshold1}")
     print(f"\nOptimal Min Threshold (adc2): {optimal_min_threshold2}")
     print(f"Optimal Max Threshold (adc2): {optimal_max_threshold2}")
-    
+
     end_time = time.time()
     elapsed_time = end_time - start_time - 2
 
-    print(f"\nSaved plot in \"water_peak.png\"")
+    print(f'\nSaved plot in "water_peak.png"')
     print(f"\nTotal time taken: {elapsed_time} seconds")
+
 
 # Command group
 @click.group()
