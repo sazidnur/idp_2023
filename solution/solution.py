@@ -1,6 +1,7 @@
 import click
 from tqdm import tqdm
 import time
+from datetime import datetime
 import warnings
 import pandas as pd
 import numpy as np
@@ -9,7 +10,7 @@ from scipy.signal import find_peaks, savgol_filter, peak_widths
 
 
 def solution(input_csv, output_csv=None):
-    start_time = time.time()
+    start_timestamp = datetime.now()
 
     all_adc2 = []
     chunk_size = 50000
@@ -184,17 +185,18 @@ def solution(input_csv, output_csv=None):
 
     print("\nAverage Widths:")
     for label, width in avg_widths.items():
-        print(f"{label}: {str(width)}")
+        formatted_width = f"{width:.7f}".rstrip('0').rstrip('.')
+        print(f"{label}: {formatted_width}")
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time - 3
+    end_timestamp = datetime.now()
+    elapsed_time = end_timestamp - start_timestamp
 
     print(f'\nSaved plot in "peak_detection.png"')
-    print(f"\nTotal time taken: {elapsed_time} seconds")
+    print(f"\nTotal time taken: {elapsed_time.total_seconds() - 3} seconds")
 
 
 def generate_water_threshold(input_file, non_baseline_fixed):
-    start_time = time.time()
+    start_timestamp = datetime.now()
 
     all_adc2 = []
     chunk_size = 50000
@@ -276,11 +278,11 @@ def generate_water_threshold(input_file, non_baseline_fixed):
     print(f"\nOptimal Min Threshold (adc2): {optimal_min_threshold2}")
     print(f"Optimal Max Threshold (adc2): {optimal_max_threshold2}")
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time - 2
+    end_timestamp = datetime.now()
+    elapsed_time = end_timestamp - start_timestamp
 
     print(f'\nSaved plot in "water_peak.png"')
-    print(f"\nTotal time taken: {elapsed_time} seconds")
+    print(f"\nTotal time taken: {elapsed_time.total_seconds() - 2} seconds")
 
 
 # Command group
