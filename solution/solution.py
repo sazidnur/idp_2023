@@ -71,7 +71,7 @@ def solution(input_csv, output_csv=None):
             return "r"
         else:
             return "g"
-    
+
     def calculate_annotation_offset(max_height):
         if max_height <= 780:
             return 4
@@ -91,7 +91,7 @@ def solution(input_csv, output_csv=None):
             return 50
         else:
             return 0.02 * max_height
-    
+
     with tqdm(desc="Analyzing", total=100, bar_format="{l_bar}{bar}|") as pbar:
         # Create plots for ADC2
         fig2, ax2 = plt.subplots(figsize=(100, 10))
@@ -147,7 +147,10 @@ def solution(input_csv, output_csv=None):
             ax2.annotate(
                 "",
                 xy=(peak_time, peak_value),
-                xytext=(peak_time, peak_value + annotation_offset),  # "annotation_offset" units above the peak
+                xytext=(
+                    peak_time,
+                    peak_value + annotation_offset,
+                ),  # "annotation_offset" units above the peak
                 arrowprops=dict(arrowstyle="->", color=color),
             )
         pbar.update(10)
@@ -210,7 +213,7 @@ def solution(input_csv, output_csv=None):
 
     print("\nAverage Widths:")
     for label, width in avg_widths.items():
-        formatted_width = f"{width:.7f}".rstrip('0').rstrip('.')
+        formatted_width = f"{width:.7f}".rstrip("0").rstrip(".")
         print(f"{label}: {formatted_width}")
 
     end_timestamp = datetime.now()
