@@ -71,7 +71,27 @@ def solution(input_csv, output_csv=None):
             return "r"
         else:
             return "g"
-
+    
+    def calculate_annotation_offset(max_height):
+        if max_height <= 780:
+            return 4
+        elif max_height <= 1000:
+            return 8
+        elif max_height <= 1250:
+            return 12
+        elif max_height <= 1500:
+            return 20
+        elif max_height <= 1750:
+            return 30
+        elif max_height <= 2000:
+            return 35
+        elif max_height <= 2250:
+            return 42
+        elif max_height <= 2500:
+            return 50
+        else:
+            return 0.02 * max_height
+    
     with tqdm(desc="Analyzing", total=100, bar_format="{l_bar}{bar}|") as pbar:
         # Create plots for ADC2
         fig2, ax2 = plt.subplots(figsize=(100, 10))
@@ -86,6 +106,11 @@ def solution(input_csv, output_csv=None):
         peak_indices = []
         eps_value = 1e-2
         eps_index = 2000
+
+        max_signal_height = np.max(all_adc2)
+        annotation_offset = calculate_annotation_offset(max_signal_height)
+        pbar.update(10)
+        time.sleep(1)
 
         for peak in final_peaks2:
             color = get_peak_color(
@@ -108,7 +133,7 @@ def solution(input_csv, output_csv=None):
                         peak_indices.append(peak)
                         prev_peak_value = filtered_adc2[peak]
                         prev_peak_index = peak
-        pbar.update(30)
+        pbar.update(20)
 
         for peak in peak_indices:
             color = get_peak_color(
@@ -122,7 +147,7 @@ def solution(input_csv, output_csv=None):
             ax2.annotate(
                 "",
                 xy=(peak_time, peak_value),
-                xytext=(peak_time, peak_value + 50),  # 50 units above the peak
+                xytext=(peak_time, peak_value + annotation_offset),  # "annotation_offset" units above the peak
                 arrowprops=dict(arrowstyle="->", color=color),
             )
         pbar.update(10)
@@ -131,7 +156,7 @@ def solution(input_csv, output_csv=None):
         fig2.savefig("peak_detection.png", dpi=300)
         pbar.update(10)
 
-        time.sleep(2)
+        time.sleep(1)
 
         # Calculate peak widths
         with warnings.catch_warnings():
